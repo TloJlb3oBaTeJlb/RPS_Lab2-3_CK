@@ -1,11 +1,14 @@
 ﻿#include <locale>
 #include <iostream>
+#include "MenuInterface.h"
 
 int main() {
 
-	setlocale(0, "");
+	system("chcp 1251>nul");
 
-	std::cout << "Привет мир!" << std::endl;
+	ShowGreeting();
+
+	ChooseMainMenuOption();
 
 	system("PAUSE");
 }
