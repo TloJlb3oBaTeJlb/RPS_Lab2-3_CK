@@ -1,5 +1,7 @@
 #include <iostream>
+#include <vector>
 #include "InputCheck.h"
+#include "SortAlgorithm.h"
 
 using namespace std;
 
@@ -25,12 +27,15 @@ void ShowMainMenuOptions() {
 void ChooseMainMenuOption() {
 	MainMenuItems userChoice = static_cast<MainMenuItems>(0);
 	ShowMainMenuOptions();
+	vector<int> rawVector;
 	do {
 		userChoice = GetMainMenuItems();
 		switch (userChoice) {
 		case MANUAL_INPUT:
 			cout << endl;
-			cout << "Manual input function" << endl;
+			rawVector = GetUserVector();
+			SortVector(rawVector);
+			cout << "Some save menu options" << endl;
 			break;
 		case RANDOM_ARRAY:
 			cout << endl;

@@ -6,3 +6,5 @@ using namespace std;
 int GetInt();
 
 MainMenuItems GetMainMenuItems();
+
+vector<int> GetUserVector();
