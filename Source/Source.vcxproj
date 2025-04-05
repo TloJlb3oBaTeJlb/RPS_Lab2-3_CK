@@ -128,6 +128,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SortAlgorithm.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="InputCheck.cpp" />
     <ClCompile Include="MenuInterface.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -136,6 +138,7 @@
     <ClInclude Include="InputCheck.h" />
     <ClInclude Include="MenuInterface.h" />
     <ClInclude Include="MenuItems.h" />
+    <ClInclude Include="SortAlgorithm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
