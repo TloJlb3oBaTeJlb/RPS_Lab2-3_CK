@@ -3,6 +3,7 @@
 #include "FileWork.h"
 #include "InputCheck.h"
 #include "SortAlgorithm.h"
+#include "RandomArrayGeneration.h"
 
 using namespace std;
 
@@ -70,14 +71,16 @@ void ChooseMainMenuOption() {
 			break;
 		case RANDOM_ARRAY:
 			cout << endl;
-			//RandomIntGenerator(randomArraySize);
+			rawVector = RandomVectorGenerator();
+			SortVector(rawVector);
+			SaveResultMenu(rawVector);
 			break;
 		case QUIT:
 			cout << endl;
 			cout << "Завершение работы" << endl;
 			break;
 		default:
-			cout << "Данного пункта меню не существует." << endl << endl;
+			cout << endl << "Данного пункта меню не существует. Пожалуйста, выбирите один из предложанных вариантов." << endl;
 			break;
 		}
 	} while (userChoice != QUIT);
