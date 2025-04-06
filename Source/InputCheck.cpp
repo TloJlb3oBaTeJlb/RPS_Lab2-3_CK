@@ -11,7 +11,7 @@ T GetInput() {
 	cin >> userInput;
 	if (cin.fail()) {
 		while (cin.fail()) {
-			cout << "Ошибка ввода. Пожалуйста, попробуйте другой тип данных." << endl;
+			cout << endl << "Ошибка ввода. Пожалуйста, попробуйте другой тип данных." << endl;
 			cin.clear();
 			cin.ignore(LLONG_MAX, '\n');
 			cin >> userInput;
@@ -53,7 +53,7 @@ vector<int> GetUserVector() {
 		int element = GetInt();
 		userVector.push_back(element);
 	}
-	cout << endl << "Ввод завершен. Полученный массив: ";
+	cout << endl << "Ввод завершен. Полученный массив:" << endl;
 	for (int element : userVector) {
 		cout << element << " ";
 	}
