@@ -70,7 +70,7 @@ void ChooseMainMenuOption() {
 			break;
 		case RANDOM_ARRAY:
 			cout << endl;
-			cout << "Random array work function" << endl;
+			//RandomIntGenerator(randomArraySize);
 			break;
 		case QUIT:
 			cout << endl;
