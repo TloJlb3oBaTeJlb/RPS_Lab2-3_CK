@@ -2,4 +2,4 @@
 
 #include <vector>
 
-std::vector<int> QuickSort(const std::vector<int>& array);
+void SortVector(const std::vector<int>& vector);
