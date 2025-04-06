@@ -1,0 +1,12 @@
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\bin\Debug\SourceGUI.exe.config
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\bin\Debug\SourceGUI.exe
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\bin\Debug\SourceGUI.pdb
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\bin\Debug\SourceGUI.xml
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.vbproj.AssemblyReference.cache
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.Resources.resources
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.vbproj.GenerateResource.cache
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.vbproj.CoreCompileInputs.cache
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.exe
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.xml
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.pdb
+C:\Users\chudovihome\Desktop\Unik and Useful Progs\Сети и  ПС\RPS_Git\SourceGUI\obj\Debug\SourceGUI.Form1.resources
