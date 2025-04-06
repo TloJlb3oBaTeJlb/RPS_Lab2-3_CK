@@ -3,18 +3,26 @@
 #include <ctime>
 using namespace std;
 
-int RandomIntGenerator() {
-    srand(time(NULL));
+int RandomIntGenerator(int randomArraySize) {
 
-    int minusDeterminator = rand();
     int randomInt = rand();
 
-    if (minusDeterminator % 2 == 0) {
-        randomInt = -randomInt;
+    for (int i = 1; i < randomArraySize + 1; i++) {
+
+        srand(time(NULL) + 2);
+
+        int minusDeterminator = rand();
+
+        randomInt = randomInt / i;
+
+        if (minusDeterminator % 2 == 0) {
+            randomInt = -randomInt;
+        }
+
+        cout << randomInt << endl;
+
     }
-
-    cout << randomInt << endl;
-
     return randomInt;
-
 }
+
+

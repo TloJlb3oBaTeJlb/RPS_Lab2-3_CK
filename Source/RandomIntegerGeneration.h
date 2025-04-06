@@ -1,3 +1,5 @@
 #pragma once
 
-int RandomIntGenerator();
+int RandomIntGenerator(int randomArraySize);
+
+int main();

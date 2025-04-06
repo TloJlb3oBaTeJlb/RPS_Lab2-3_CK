@@ -1,8 +1,6 @@
 #include <iostream>
 #include "InputCheck.h"
 
-#include "RandomIntegerGeneration.h"//
-
 using namespace std;
 
 void ShowGreeting() {
@@ -36,7 +34,7 @@ void ChooseMainMenuOption() {
 			break;
 		case RANDOM_ARRAY:
 			cout << endl;
-			RandomIntGenerator();
+			//RandomIntGenerator(randomArraySize);
 			break;
 		case QUIT:
 			cout << endl;
