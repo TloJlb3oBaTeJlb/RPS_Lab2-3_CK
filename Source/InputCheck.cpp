@@ -29,6 +29,10 @@ MainMenuItems GetMainMenuItems() {
 	return static_cast<MainMenuItems>(GetInt());
 }
 
+SaveResultMenuItems GetSaveResultMenuItem() {
+	return static_cast<SaveResultMenuItems>(GetInt());
+}
+
 vector<int> GetUserVector() {
 	vector<int> userVector;
 	int numberOfElements;
