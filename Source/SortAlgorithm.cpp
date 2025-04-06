@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 std::vector<int> QuickSort(const std::vector<int>& array) {
     if (array.size() <= 1) {
@@ -27,4 +28,13 @@ std::vector<int> QuickSort(const std::vector<int>& array) {
     sortedLess.insert(sortedLess.end(), sortedGreater.begin(), sortedGreater.end());
 
     return sortedLess;
+}
+
+void SortVector(const std::vector<int>& vector) {
+	std::vector<int> sortedVector = QuickSort(vector);
+    std::cout << "Отсортированный массив: ";
+	for (const int num : sortedVector) {
+		std::cout << num << " ";
+	}
+	std::cout << std::endl;
 }

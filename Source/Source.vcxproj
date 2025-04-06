@@ -129,12 +129,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="RandomIntegerGeneration.cpp" />
+    <ClCompile Include="FileWork.cpp" />
     <ClCompile Include="SortAlgorithm.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="InputCheck.cpp" />
     <ClCompile Include="MenuInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileWork.h" />
     <ClInclude Include="InputCheck.h" />
     <ClInclude Include="MenuInterface.h" />
     <ClInclude Include="MenuItems.h" />
