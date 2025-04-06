@@ -10,8 +10,77 @@
 /Sol 2.5.txt
 /Sol.txt
 /Файлы в программе.txt
-/SourceGUI/.vs/SourceGUI/FileContentIndex
-/SourceGUI/bin/Debug
+/SourceGUI/.vs
+/SourceGUI/bin
 /SourceGUI/.vs/SourceGUI/v17
 /SourceGUI/packages
+/SourceGUI/[Oo]bj
+
+# Файл .gitignore для проекта Visual Studio (VB.NET)
+
+# Пользовательские настройки Visual Studio
+*.suo
+*.user
+*.vbproj.user
+*.sln.docstates
+
+# Папки кэша и настроек Visual Studio (обычно .vs/{solutionName}/v16+, v17+)
+.vs/
+
+# Папки вывода сборки
+[Bb]in/
 [Oo]bj/
+
+# NuGet пакеты (предполагается использование PackageReference в .vbproj или restore)
+packages/
+*.nupkg
+# Исключение для файла конфигурации репозиториев NuGet, если он используется
+!packages/repositories.config
+
+# Файлы, генерируемые ReSharper (если используется)
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Файлы результатов тестов
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Временные файлы Visual Studio и Windows
+*.tmp
+*.bak
+*.cache
+*.log
+*~
+
+# Файлы, связанные с ClickOnce (если не используется для развертывания через Git)
+publish/
+*.application
+*.deploy
+
+# Файлы IntelliTrace
+*.itrace
+
+# Файлы Service Fabric (если применимо)
+*.sfproj.user
+
+# Файлы профилировщика Visual Studio
+*.psess
+*.vsp
+*.vspx
+
+# Файлы отчета об обновлении Visual Studio
+UpgradeLog*.htm
+UpgradeLog*.xml
+Backup*/
+
+# Дополнительные артефакты сборки
+*.pdb # Обычно не нужны в репозитории, генерируются при сборке
+*.dll # Игнорировать в папках bin/obj, основные зависимости управляются NuGet
+*.exe # Игнорировать в папках bin/obj
+*.xml # XML-файлы документации, генерируемые при сборке
+
+# Исключения (если вы ВДРУГ храните какие-то важные DLL/EXE прямо в репозитории,
+# что обычно НЕ рекомендуется, то можно добавить исключения вроде !MyImportantLib.dll,
+# но лучше управлять зависимостями через NuGet)
