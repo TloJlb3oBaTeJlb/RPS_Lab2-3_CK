@@ -1,0 +1,100 @@
+Imports System.Data ' Для DataTable
+
+Public Class FormHistory
+
+    ' Приватные поля для хранения загруженных данных перед передачей в Form1
+    Private _loadedOriginalArray As List(Of Integer) = Nothing
+    Private _loadedSortedArray As List(Of Integer) = Nothing
+
+    ' Публичные свойства (только для чтения) для доступа из Form1 ПОСЛЕ закрытия этой формы
+    Public ReadOnly Property LoadedOriginalArray As List(Of Integer)
+        Get
+            Return _loadedOriginalArray
+        End Get
+    End Property
+
+    Public ReadOnly Property LoadedSortedArray As List(Of Integer)
+        Get
+            Return _loadedSortedArray
+        End Get
+    End Property
+
+    ' Загрузка формы: заполняем таблицу истории
+    Private Sub FormHistory_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LoadHistoryGridData()
+    End Sub
+
+    ' Метод для загрузки данных истории в DataGridView
+    Private Sub LoadHistoryGridData()
+        ' Используем DatabaseHelper (он должен быть Public Module в вашем проекте)
+        Dim historyData As DataTable = DatabaseHelper.GetAllSortHistoryMetadata()
+
+        If historyData IsNot Nothing Then
+            dgvHistory.DataSource = historyData ' Привязываем DataTable
+
+            ' Настройка отображения колонок
+            If dgvHistory.Columns.Contains("ID") Then
+                dgvHistory.Columns("ID").HeaderText = "ID"
+                dgvHistory.Columns("ID").Width = 60
+            End If
+            If dgvHistory.Columns.Contains("Timestamp") Then
+                dgvHistory.Columns("Timestamp").HeaderText = "Дата и время"
+                dgvHistory.Columns("Timestamp").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            End If
+
+            ' Делаем кнопку "Загрузить" доступной только если есть строки
+            btnLoadSelected.Enabled = (historyData.Rows.Count > 0)
+        Else
+            dgvHistory.DataSource = Nothing ' Очищаем грид в случае ошибки
+            btnLoadSelected.Enabled = False ' Блокируем кнопку загрузки
+            MessageBox.Show("Не удалось загрузить историю сортировок из базы данных.", "Ошибка БД", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
+    End Sub
+
+    ' Кнопка "Загрузить выбранное"
+    Private Sub btnLoadSelected_Click(sender As Object, e As EventArgs) Handles btnLoadSelected.Click
+        ' Проверяем, выбрана ли строка
+        If dgvHistory.SelectedRows.Count > 0 Then
+            ' Берем первую выбранную строку (т.к. MultiSelect = False)
+            Dim selectedRow As DataGridViewRow = dgvHistory.SelectedRows(0)
+
+            ' Получаем ID из первой ячейки (предполагаем, что ID в колонке с индексом 0)
+            Dim idValue As Object = selectedRow.Cells(0).Value
+            Dim selectedId As Integer
+
+            If idValue IsNot Nothing AndAlso Integer.TryParse(idValue.ToString(), selectedId) Then
+                ' Пытаемся загрузить данные по ID
+                Dim loadedData As Tuple(Of List(Of Integer), List(Of Integer)) = DatabaseHelper.LoadSortResultById(selectedId)
+
+                If loadedData IsNot Nothing Then
+                    ' Сохраняем загруженные данные в приватные поля
+                    _loadedOriginalArray = loadedData.Item1
+                    _loadedSortedArray = loadedData.Item2
+
+                    ' Устанавливаем DialogResult в OK, чтобы Form1 знала об успехе
+                    Me.DialogResult = DialogResult.OK
+                    Me.Close() ' Закрываем эту форму
+                Else
+                    MessageBox.Show($"Не удалось загрузить данные для записи с ID={selectedId}. Возможно, она повреждена или не содержит данных.", "Ошибка загрузки", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    ' Сбрасываем результат на случай, если ранее был установлен OK
+                    Me.DialogResult = DialogResult.None
+                End If
+            Else
+                MessageBox.Show("Не удалось получить или распознать ID из выбранной строки.", "Ошибка выбора", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Me.DialogResult = DialogResult.None
+            End If
+        Else
+            MessageBox.Show("Пожалуйста, выберите строку для загрузки.", "Нет выбора", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Me.DialogResult = DialogResult.None
+        End If
+    End Sub
+
+    ' Кнопка "Закрыть"
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        ' Устанавливаем DialogResult в Cancel (или можно просто None/OK, в зависимости от логики)
+        ' Cancel обычно означает, что пользователь отменил действие (не выбрал ничего для загрузки)
+        Me.DialogResult = DialogResult.Cancel
+        Me.Close() ' Закрываем форму
+    End Sub
+
+End Class

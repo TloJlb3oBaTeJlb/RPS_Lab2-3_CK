@@ -33,9 +33,7 @@ Partial Class Form1
         Me.gbManualInput = New System.Windows.Forms.GroupBox()
         Me.btnSubmitManual = New System.Windows.Forms.Button()
         Me.txtManualInput = New System.Windows.Forms.TextBox()
-        Me.nudArraySize = New System.Windows.Forms.NumericUpDown()
         Me.lblArrayManual = New System.Windows.Forms.Label()
-        Me.lblArraySize = New System.Windows.Forms.Label()
         Me.gbArrays = New System.Windows.Forms.GroupBox()
         Me.tlpArrayDisplay = New System.Windows.Forms.TableLayoutPanel()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -44,7 +42,9 @@ Partial Class Form1
         Me.txtSortedArray = New System.Windows.Forms.TextBox()
         Me.flpButtons = New System.Windows.Forms.FlowLayoutPanel()
         Me.btnExit = New System.Windows.Forms.Button()
-        Me.btnSave = New System.Windows.Forms.Button()
+        Me.btnOpenDatabase = New System.Windows.Forms.Button()
+        Me.btnSaveDB = New System.Windows.Forms.Button()
+        Me.btnSaveFile = New System.Windows.Forms.Button()
         Me.btnSort = New System.Windows.Forms.Button()
         Me.sfdSaveArray = New System.Windows.Forms.SaveFileDialog()
         Me.tlpMain.SuspendLayout()
@@ -52,7 +52,6 @@ Partial Class Form1
         Me.pnlInputDetails.SuspendLayout()
         Me.gbRandomGenerate.SuspendLayout()
         Me.gbManualInput.SuspendLayout()
-        CType(Me.nudArraySize, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbArrays.SuspendLayout()
         Me.tlpArrayDisplay.SuspendLayout()
         Me.flpButtons.SuspendLayout()
@@ -162,9 +161,7 @@ Partial Class Form1
         '
         Me.gbManualInput.Controls.Add(Me.btnSubmitManual)
         Me.gbManualInput.Controls.Add(Me.txtManualInput)
-        Me.gbManualInput.Controls.Add(Me.nudArraySize)
         Me.gbManualInput.Controls.Add(Me.lblArrayManual)
-        Me.gbManualInput.Controls.Add(Me.lblArraySize)
         Me.gbManualInput.Dock = System.Windows.Forms.DockStyle.Top
         Me.gbManualInput.Location = New System.Drawing.Point(0, 0)
         Me.gbManualInput.Name = "gbManualInput"
@@ -175,7 +172,7 @@ Partial Class Form1
         '
         'btnSubmitManual
         '
-        Me.btnSubmitManual.Location = New System.Drawing.Point(261, 100)
+        Me.btnSubmitManual.Location = New System.Drawing.Point(668, 100)
         Me.btnSubmitManual.Name = "btnSubmitManual"
         Me.btnSubmitManual.Size = New System.Drawing.Size(114, 23)
         Me.btnSubmitManual.TabIndex = 4
@@ -188,18 +185,8 @@ Partial Class Form1
         Me.txtManualInput.Multiline = True
         Me.txtManualInput.Name = "txtManualInput"
         Me.txtManualInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtManualInput.Size = New System.Drawing.Size(369, 42)
+        Me.txtManualInput.Size = New System.Drawing.Size(776, 42)
         Me.txtManualInput.TabIndex = 3
-        '
-        'nudArraySize
-        '
-        Me.nudArraySize.Location = New System.Drawing.Point(255, 13)
-        Me.nudArraySize.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
-        Me.nudArraySize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.nudArraySize.Name = "nudArraySize"
-        Me.nudArraySize.Size = New System.Drawing.Size(120, 20)
-        Me.nudArraySize.TabIndex = 2
-        Me.nudArraySize.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'lblArrayManual
         '
@@ -209,16 +196,6 @@ Partial Class Form1
         Me.lblArrayManual.Size = New System.Drawing.Size(287, 13)
         Me.lblArrayManual.TabIndex = 1
         Me.lblArrayManual.Text = "Элементы массива (через пробел или с новой строки):"
-        '
-        'lblArraySize
-        '
-        Me.lblArraySize.AutoSize = True
-        Me.lblArraySize.Dock = System.Windows.Forms.DockStyle.Top
-        Me.lblArraySize.Location = New System.Drawing.Point(3, 16)
-        Me.lblArraySize.Name = "lblArraySize"
-        Me.lblArraySize.Size = New System.Drawing.Size(96, 13)
-        Me.lblArraySize.TabIndex = 0
-        Me.lblArraySize.Text = "Размер массива:"
         '
         'gbArrays
         '
@@ -294,7 +271,9 @@ Partial Class Form1
         Me.flpButtons.AutoSize = True
         Me.flpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.flpButtons.Controls.Add(Me.btnExit)
-        Me.flpButtons.Controls.Add(Me.btnSave)
+        Me.flpButtons.Controls.Add(Me.btnOpenDatabase)
+        Me.flpButtons.Controls.Add(Me.btnSaveDB)
+        Me.flpButtons.Controls.Add(Me.btnSaveFile)
         Me.flpButtons.Controls.Add(Me.btnSort)
         Me.flpButtons.Dock = System.Windows.Forms.DockStyle.Fill
         Me.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
@@ -313,21 +292,39 @@ Partial Class Form1
         Me.btnExit.Text = "Выход"
         Me.btnExit.UseVisualStyleBackColor = True
         '
-        'btnSave
+        'btnOpenDatabase
         '
-        Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(594, 3)
-        Me.btnSave.Margin = New System.Windows.Forms.Padding(3, 3, 1, 3)
-        Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(118, 23)
-        Me.btnSave.TabIndex = 1
-        Me.btnSave.Text = "Сохранить массив"
-        Me.btnSave.UseVisualStyleBackColor = True
+        Me.btnOpenDatabase.Location = New System.Drawing.Point(579, 3)
+        Me.btnOpenDatabase.Name = "btnOpenDatabase"
+        Me.btnOpenDatabase.Size = New System.Drawing.Size(131, 23)
+        Me.btnOpenDatabase.TabIndex = 4
+        Me.btnOpenDatabase.Text = "Открыть Базу Данных"
+        Me.btnOpenDatabase.UseVisualStyleBackColor = True
+        '
+        'btnSaveDB
+        '
+        Me.btnSaveDB.Location = New System.Drawing.Point(466, 3)
+        Me.btnSaveDB.Name = "btnSaveDB"
+        Me.btnSaveDB.Size = New System.Drawing.Size(107, 23)
+        Me.btnSaveDB.TabIndex = 3
+        Me.btnSaveDB.Text = "Сохранить в БД"
+        Me.btnSaveDB.UseVisualStyleBackColor = True
+        '
+        'btnSaveFile
+        '
+        Me.btnSaveFile.Enabled = False
+        Me.btnSaveFile.Location = New System.Drawing.Point(344, 3)
+        Me.btnSaveFile.Margin = New System.Windows.Forms.Padding(3, 3, 1, 3)
+        Me.btnSaveFile.Name = "btnSaveFile"
+        Me.btnSaveFile.Size = New System.Drawing.Size(118, 23)
+        Me.btnSaveFile.TabIndex = 1
+        Me.btnSaveFile.Text = "Сохранить в файл"
+        Me.btnSaveFile.UseVisualStyleBackColor = True
         '
         'btnSort
         '
         Me.btnSort.Enabled = False
-        Me.btnSort.Location = New System.Drawing.Point(494, 3)
+        Me.btnSort.Location = New System.Drawing.Point(244, 3)
         Me.btnSort.Name = "btnSort"
         Me.btnSort.Size = New System.Drawing.Size(94, 23)
         Me.btnSort.TabIndex = 0
@@ -356,7 +353,6 @@ Partial Class Form1
         Me.gbRandomGenerate.ResumeLayout(False)
         Me.gbManualInput.ResumeLayout(False)
         Me.gbManualInput.PerformLayout()
-        CType(Me.nudArraySize, System.ComponentModel.ISupportInitialize).EndInit()
         Me.gbArrays.ResumeLayout(False)
         Me.tlpArrayDisplay.ResumeLayout(False)
         Me.tlpArrayDisplay.PerformLayout()
@@ -373,9 +369,7 @@ Partial Class Form1
     Friend WithEvents pnlInputDetails As Panel
     Friend WithEvents gbRandomGenerate As GroupBox
     Friend WithEvents gbManualInput As GroupBox
-    Friend WithEvents nudArraySize As NumericUpDown
     Friend WithEvents lblArrayManual As Label
-    Friend WithEvents lblArraySize As Label
     Friend WithEvents txtManualInput As TextBox
     Friend WithEvents btnSubmitManual As Button
     Friend WithEvents btnGenerateRandom As Button
@@ -387,7 +381,9 @@ Partial Class Form1
     Friend WithEvents txtSortedArray As TextBox
     Friend WithEvents flpButtons As FlowLayoutPanel
     Friend WithEvents btnExit As Button
-    Friend WithEvents btnSave As Button
+    Friend WithEvents btnSaveFile As Button
     Friend WithEvents btnSort As Button
     Friend WithEvents sfdSaveArray As SaveFileDialog
+    Friend WithEvents btnSaveDB As Button
+    Friend WithEvents btnOpenDatabase As Button
 End Class
