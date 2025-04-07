@@ -11,7 +11,9 @@ Public Module DatabaseHelper
     ' Функция для получения полного пути к файлу БД
     ' Размещает БД в той же папке, где находится .exe файл приложения
     Private Function GetDatabasePath() As String
-        Return Path.Combine(Application.StartupPath, dbFileName)
+        Dim executablePath As String = Application.StartupPath
+        Dim projectDirectory As String = Directory.GetParent(executablePath).Parent.FullName
+        Return Path.Combine(projectDirectory, dbFileName)
     End Function
 
     ' Функция для получения строки подключения
