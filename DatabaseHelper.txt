@@ -1,0 +1,163 @@
+Imports System.Data.SQLite
+Imports System.IO
+Imports System.Runtime.CompilerServices ' Для удобства логирования
+
+Public Module DatabaseHelper
+
+    ' Имя файла базы данных
+    Private Const dbFileName As String = "SortHistory.sqlite"
+
+    ' Функция для получения полного пути к файлу БД
+    ' Размещает БД в той же папке, где находится .exe файл приложения
+    Private Function GetDatabasePath() As String
+        Return Path.Combine(Application.StartupPath, dbFileName)
+    End Function
+
+    ' Функция для получения строки подключения
+    Private Function GetConnectionString() As String
+        ' Строка подключения для System.Data.SQLite
+        Return $"Data Source={GetDatabasePath()}"
+    End Function
+
+    ''' <summary>
+    ''' Проверяет, существует ли файл базы данных SQLite по ожидаемому пути.
+    ''' </summary>
+    ''' <returns>True, если файл существует, иначе False.</returns>
+    ''' <remarks>
+    ''' Фактическое создание файла БД обычно происходит автоматически при первом открытии соединения
+    ''' (например, в функции EnsureTableExists). Эта функция полезна для проверки перед соединением.
+    ''' </remarks>
+    Public Function DatabaseFileExists() As Boolean
+        Dim dbPath As String = GetDatabasePath()
+        Try
+            Return File.Exists(dbPath)
+        Catch ex As Exception
+            LogError($"Ошибка при проверке существования файла БД по пути '{dbPath}'.", ex)
+            ' В случае ошибки проверки считаем, что файла нет (или обрабатываем иначе)
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Гарантирует, что таблица 'SortHistory' существует в базе данных.
+    ''' Создает файл БД (если отсутствует) и таблицу (если отсутствует).
+    ''' Эту функцию рекомендуется вызывать один раз при запуске приложения.
+    ''' </summary>
+    ''' <returns>True, если файл и таблица существуют или были успешно созданы, иначе False.</returns>
+    Public Function EnsureTableExists() As Boolean
+        Dim dbPath As String = GetDatabasePath() ' Получаем путь для логирования
+        Dim fileExistedBeforeConnect As Boolean = DatabaseFileExists() ' Проверяем до соединения
+
+        ' SQL запрос для создания таблицы, если она еще не существует
+        Dim sql As String = "CREATE TABLE IF NOT EXISTS SortHistory (" &
+                            "ID INTEGER PRIMARY KEY AUTOINCREMENT, " &
+                            "Timestamp TEXT NOT NULL, " &
+                            "OriginalArray TEXT NULL, " &
+                            "SortedArray TEXT NULL);"
+
+        Dim connectionString = GetConnectionString()
+        Try
+            ' Используем Using для автоматического закрытия и освобождения ресурсов
+            Using conn As New SqliteConnection(connectionString)
+                ' !!! Вот здесь происходит неявное создание файла БД, если его не было !!!
+                conn.Open() ' Открываем соединение
+
+                ' Логируем, если файл был только что создан
+                If Not fileExistedBeforeConnect AndAlso File.Exists(dbPath) Then
+                    LogInfo($"Файл базы данных '{dbPath}' не найден и был создан.")
+                End If
+
+                ' Теперь создаем таблицу в (возможно, только что созданном) файле
+                Using cmd As New SqliteCommand(sql, conn)
+                    cmd.ExecuteNonQuery() ' Выполняем команду создания таблицы
+                End Using ' cmd освобождается
+            End Using ' conn закрывается и освобождается
+            Return True ' Успех
+        Catch ex As Exception
+            LogError("Ошибка при проверке/создании таблицы SortHistory.", ex)
+            Return False ' Неудача
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Сохраняет исходный и отсортированный массивы в таблицу SortHistory.
+    ''' </summary>
+    ''' <param name="originalArray">Список целых чисел - исходный массив.</param>
+    ''' <param name="sortedArray">Список целых чисел - отсортированный массив.</param>
+    ''' <returns>True, если сохранение прошло успешно, иначе False.</returns>
+    Public Function SaveSortResult(originalArray As List(Of Integer), sortedArray As List(Of Integer)) As Boolean
+        If originalArray Is Nothing OrElse sortedArray Is Nothing Then
+            LogError("Попытка сохранить пустые массивы (Nothing).")
+            Return False
+        End If
+
+        ' Преобразуем списки в строки, разделенные запятыми
+        Dim originalStr As String = String.Join(",", originalArray)
+        Dim sortedStr As String = String.Join(",", sortedArray)
+        ' Получаем текущее время и форматируем в стандарт ISO 8601 ("s")
+        Dim timestampStr As String = DateTime.Now.ToString("s") ' Пример: "2025-04-07T01:27:00"
+
+        ' SQL запрос для вставки данных с использованием параметров
+        Dim sql As String = "INSERT INTO SortHistory (Timestamp, OriginalArray, SortedArray) VALUES (@Timestamp, @Original, @Sorted)"
+
+        Dim connectionString = GetConnectionString()
+        Try
+            Using conn As New SQLiteConnection(connectionString)
+                conn.Open()
+                Using cmd As New SQLiteCommand(sql, conn)
+                    ' Добавляем параметры. Это ВАЖНО для предотвращения SQL-инъекций!
+                    cmd.Parameters.AddWithValue("@Timestamp", timestampStr)
+                    cmd.Parameters.AddWithValue("@Original", originalStr)
+                    cmd.Parameters.AddWithValue("@Sorted", sortedStr)
+
+                    cmd.ExecuteNonQuery() ' Выполняем команду вставки
+                End Using ' cmd освобождается
+            End Using ' conn закрывается и освобождается
+            Return True ' Успех
+        Catch ex As Exception
+            LogError("Ошибка при сохранении результатов сортировки в БД.", ex)
+            Return False ' Неудача
+        End Try
+    End Function
+
+    ' --- Добавьте также эту функцию для информационных сообщений ---
+    ' Простой вспомогательный метод для логирования информационных сообщений
+    Private Sub LogInfo(message As String, <CallerMemberName> Optional memberName As String = "")
+        Dim infoMsg As String = $"[{DateTime.Now:G}] [{memberName}] {message}"
+
+        ' Выводим в окно Output в Visual Studio
+        Console.WriteLine("--- INFO ---")
+        Console.WriteLine(infoMsg)
+        Console.WriteLine("------------")
+    End Sub
+
+    ' Простой вспомогательный метод для логирования ошибок (можно расширить)
+    Private Sub LogError(message As String, Optional ex As Exception = Nothing, <CallerMemberName> Optional memberName As String = "")
+        Dim errorMsg As String = $"[{DateTime.Now:G}] [{memberName}] {message}"
+        If ex IsNot Nothing Then
+            errorMsg &= $"{vbCrLf}   Exception: {ex.GetType().Name} - {ex.Message}"
+
+            ' --- Добавлено: Логирование вложенных исключений ---
+            Dim innerEx As Exception = ex.InnerException
+            Dim level As Integer = 1
+            While innerEx IsNot Nothing
+                errorMsg &= $"{vbCrLf}   InnerException (Level {level}): {innerEx.GetType().Name} - {innerEx.Message}"
+                ' При необходимости можно добавить и StackTrace для InnerException
+                ' errorMsg &= $"{vbCrLf}      Inner StackTrace: {innerEx.StackTrace}"
+                innerEx = innerEx.InnerException
+                level += 1
+            End While
+            ' --- Конец добавленного кода ---
+
+            ' Основной StackTrace может быть очень длинным, оставим его опциональным или уберем пока
+            ' errorMsg &= $"{vbCrLf}   StackTrace: {ex.StackTrace}"
+        End If
+
+        Console.WriteLine("--- ERROR ---")
+        Console.WriteLine(errorMsg)
+        Console.WriteLine("-------------")
+
+        ' MessageBox.Show(message & If(ex IsNot Nothing, vbCrLf & ex.Message, ""), "Ошибка Базы Данных", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
+End Module

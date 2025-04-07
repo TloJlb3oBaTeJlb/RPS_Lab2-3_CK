@@ -1,5 +1,4 @@
-﻿Imports System.IO
-Imports System.Windows.Forms.VisualStyles ' Для работы с файлами
+Imports System.IO ' Для работы с файлами
 
 Public Class Form1
 
@@ -58,11 +57,12 @@ Public Class Form1
     ' Кнопка "Создать массив" (ручной ввод)
     Private Sub btnSubmitManual_Click(sender As Object, e As EventArgs) Handles btnSubmitManual.Click
         ClearArraysAndResults()
+        Dim size As Integer = CInt(nudArraySize.Value)
         Dim elementsText As String = txtManualInput.Text.Trim()
         Dim elementStrings As String() = elementsText.Split(New Char() {" ", vbCrLf, vbTab}, StringSplitOptions.RemoveEmptyEntries)
 
-        If elementStrings.Length < 1 Then
-            MessageBox.Show($"Размер массива не может быть меньше 1. Пожалуйста, введите корректное количество элементов.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If elementStrings.Length <> size Then
+            MessageBox.Show($"Ожидалось {size} элементов, но введено {elementStrings.Length}. Пожалуйста, введите корректное количество элементов.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -168,56 +168,5 @@ Public Class Form1
         Else
             MessageBox.Show("Нет данных для сохранения.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
-    End Sub
-
-    Private Sub btnOpenDatabase_Click(sender As Object, e As EventArgs) Handles btnOpenDatabase.Click
-        ' Используем Using для автоматического освобождения ресурсов формы истории
-        Using historyForm As New FormHistory()
-
-            ' Открываем форму истории как модальное диалоговое окно
-            ' Это означает, что пользователь не сможет взаимодействовать с Form1, пока FormHistory открыта
-            Dim result As DialogResult = historyForm.ShowDialog(Me) ' Me - указываем владельца окна
-
-            ' Проверяем, закрыл ли пользователь форму нажатием "Загрузить выбранное"
-            If result = DialogResult.OK Then
-                ' Получаем загруженные данные из публичных свойств historyForm
-                Dim loadedOriginal As List(Of Integer) = historyForm.LoadedOriginalArray
-                Dim loadedSorted As List(Of Integer) = historyForm.LoadedSortedArray
-
-                ' Проверяем, что данные действительно были загружены (на всякий случай)
-                If loadedOriginal IsNot Nothing AndAlso loadedSorted IsNot Nothing Then
-                    ' Присваиваем загруженные данные массивам текущей формы
-                    originalArray = loadedOriginal
-                    sortedArray = loadedSorted
-
-                    ' Отображаем загруженные массивы в текстовых полях
-                    DisplayArray(originalArray, txtOriginalArray)
-                    DisplayArray(sortedArray, txtSortedArray)
-                    DisplayArray(originalArray, txtManualInput)
-
-                    If rbRandomGenerate.Checked Then
-                        rbRandomGenerate.Checked = False
-                        rbManualInput.Checked = True
-                        gbManualInput.Visible = True
-                        gbRandomGenerate.Visible = False
-                    End If
-
-                    ' Разрешаем действия с загруженными данными
-                    btnSort.Enabled = (originalArray.Count > 0)
-                    btnSaveDB.Enabled = (sortedArray.Count > 0) ' Уже сохранены, но можно разрешить пересохранение
-                    btnSaveFile.Enabled = (sortedArray.Count > 0)
-
-                    MessageBox.Show("Данные из базы успешно загружены.", "Загрузка завершена", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Else
-                    ' Это не должно произойти, если DialogResult = OK, но лучше проверить
-                    MessageBox.Show("Произошла внутренняя ошибка при передаче данных из формы истории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    ClearArraysAndResults() ' Очищаем поля в случае ошибки
-                End If
-            Else
-                ' Пользователь закрыл форму истории кнопкой "Закрыть" или крестиком (DialogResult будет Cancel или None)
-                ' Ничего не делаем, просто возвращаемся к Form1
-            End If
-
-        End Using ' historyForm будет автоматически уничтожена здесь (Dispose)
     End Sub
 End Class
