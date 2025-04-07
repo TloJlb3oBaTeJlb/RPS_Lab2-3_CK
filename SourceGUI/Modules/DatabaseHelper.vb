@@ -11,13 +11,13 @@ Public Module DatabaseHelper
     ' Функция для получения полного пути к файлу БД
     ' Размещает БД в той же папке, где находится .exe файл приложения
     Private Function GetDatabasePath() As String
-        Dim executablePath As String = Application.StartupPath
-        Dim projectDirectory As String = Directory.GetParent(executablePath).Parent.FullName
-        Return Path.Combine(projectDirectory, dbFileName)
+        'Dim executablePath As String = Application.StartupPath
+        'Dim projectDirectory As String = Directory.GetParent(executablePath).Parent.FullName
+        Return Path.Combine(Application.StartupPath, dbFileName)
     End Function
 
     ' Функция для получения строки подключения
-    Private Function GetConnectionString() As String
+    Public Function GetConnectionString() As String
         ' Строка подключения для System.Data.SQLite
         Return $"Data Source={GetDatabasePath()}"
     End Function
@@ -231,7 +231,7 @@ Public Module DatabaseHelper
     End Sub
 
     ' Простой вспомогательный метод для логирования ошибок (можно расширить)
-    Private Sub LogError(message As String, Optional ex As Exception = Nothing, <CallerMemberName> Optional memberName As String = "")
+    Public Sub LogError(message As String, Optional ex As Exception = Nothing, <CallerMemberName> Optional memberName As String = "")
         Dim errorMsg As String = $"[{DateTime.Now:G}] [{memberName}] {message}"
         If ex IsNot Nothing Then
             errorMsg &= $"{vbCrLf}   Exception: {ex.GetType().Name} - {ex.Message}"
