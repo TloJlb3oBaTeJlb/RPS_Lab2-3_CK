@@ -36,13 +36,13 @@ namespace SourceGUI
     /// </summary>
     public static class DatabaseHelper
     {
-        private const string dbFileName = "MainDB.sqlite";
+        private static string dbFileName = "MainDB.sqlite";
 
         /// <summary>
         /// Получает полный путь к файлу базы данных.
         /// БД располагается в директории запуска приложения.
         /// </summary>
-        private static string GetDatabasePath()
+        public static string GetDatabasePath()
         {
             return Path.Combine(AppContext.BaseDirectory, dbFileName);
         }
@@ -142,6 +142,7 @@ namespace SourceGUI
                 return false;
             }
         }
+
 
         /// <summary>
         /// Получает метаданные всех записей истории для отображения в гриде.
@@ -393,7 +394,6 @@ namespace SourceGUI
         {
             string deleteSql = "DELETE FROM MainTable WHERE ID = @Id;";
             string updateSql = "UPDATE MainTable SET ID = ID - 1 WHERE ID > @Id;";
-
             try
             {
                 using (var connection = new SqliteConnection(GetConnectionString()))
@@ -414,6 +414,7 @@ namespace SourceGUI
 
                         transaction.Commit(); // Подтверждаем транзакцию, если обе операции прошли успешно
                     }
+                    connection.Close(); // Явно закрываем соединение
                 }
                 return true;
             }

@@ -64,7 +64,6 @@ namespace SourceGUI
         private void InputMode_Changed(object? sender, EventArgs e)
         {
             UpdateInputModeUI();
-            ClearArraysAndResults();
         }
 
         private void UpdateInputModeUI()
