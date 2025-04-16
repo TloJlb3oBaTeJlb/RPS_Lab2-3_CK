@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using System.IO;
 namespace SourceGUI
 {
     /// <summary>
-    /// Старый класс, который я полностью удалил из кода, заменив на MainTableEntry
+    /// Представляет полные данные одной записи истории сортировки. Упрщеннные форматы для удобства ввода/вывода
     /// </summary>
     public class MainTableMetadata
     {
@@ -147,9 +147,9 @@ namespace SourceGUI
         /// Получает метаданные всех записей истории для отображения в гриде.
         /// </summary>
         /// <returns>Список метаданных или пустой список при ошибке/отсутствии данных.</returns>
-        public static List<MainTableEntry> GetAllMainTableMetadata()
+        public static List<MainTableMetadata> GetAllMainTableMetadata()
         {
-            var dBList = new List<MainTableEntry>();
+            var historyList = new List<MainTableMetadata>();
             string sql = "SELECT * FROM MainTable ORDER BY Timestamp DESC"; // Сортируем по убыванию даты
 
             try
@@ -164,17 +164,16 @@ namespace SourceGUI
                         {
                             while (reader.Read())
                             {
-                                long id = reader.GetInt64(0);
                                 string timestampStr = reader.GetString(1);
-                                string originalStr = reader.IsDBNull(2) ? string.Empty : reader.GetString(2);
-                                string sortedStr = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
+                                DateTime timestamp = DateTime.Parse(timestampStr).ToLocalTime();
+                                string formattedTimestamp = timestamp.ToString("yyyy-MM-dd HH:mm:ss");
 
-                                dBList.Add(new MainTableEntry
+                                historyList.Add(new MainTableMetadata
                                 {
-                                    ID = id,
-                                    Timestamp = DateTime.Parse(timestampStr).ToLocalTime(),
-                                    OriginalArray = ParseIntListFromString(originalStr),
-                                    SortedArray = ParseIntListFromString(sortedStr)
+                                    ID = reader.GetInt64(0), // ID - INTEGER PRIMARY KEY -> long
+                                    Timestamp = formattedTimestamp,
+                                    Original = reader.GetString(2),
+                                    Sorted = reader.GetString(3),
                                 });
                             }
                         }
@@ -186,7 +185,7 @@ namespace SourceGUI
                 Console.WriteLine($"Ошибка чтения истории из БД: {ex.Message}");
                 // Возвращаем пустой список в случае ошибки
             }
-            return dBList;
+            return historyList;
         }
 
         /// <summary>
