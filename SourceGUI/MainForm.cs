@@ -81,7 +81,6 @@ namespace SourceGUI
             txtSortedArray.Text = string.Empty;
             txtManualInput.Text = string.Empty;
             btnSort.Enabled = false;
-            // Проверяем доступность БД перед включением кнопки
             btnSaveDB.Enabled = false;
             btnSaveFile.Enabled = false;
         }
@@ -89,8 +88,8 @@ namespace SourceGUI
         // --- Генерация и создание массивов ---
         private void btnSubmitManual_Click(object? sender, EventArgs e)
         {
-            string inputText = txtManualInput.Text.Trim(); // Get the text from the textbox and remove extra spaces
-            string[] elementStrings = inputText.Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // Split the text into individual numbers
+            string inputText = txtManualInput.Text.Trim(); // Получение текста из TextBox и удаление лишних пробелов
+            string[] elementStrings = inputText.Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // Деление текста на значения
 
             var tempArray = new List<int>(); // Create a list to store the integers
 
@@ -148,14 +147,9 @@ namespace SourceGUI
 
             DisplayArray(sortedArray, txtSortedArray);
             // Проверяем доступность БД перед включением кнопки
-            bool dbAvailable = DatabaseHelper.CheckDbConnection(); // Добавим метод проверки
+            bool dbAvailable = DatabaseHelper.CheckDbConnection(); // Метод проверки
             btnSaveDB.Enabled = dbAvailable;
             btnSaveFile.Enabled = true;
-            if (!dbAvailable && btnSaveDB.Visible) // Если кнопка видима, но БД недоступна
-            {
-                // Можно добавить ToolTip или изменить текст кнопки, чтобы показать, что БД недоступна
-                // toolTip1.SetToolTip(btnSaveDB, "База данных недоступна");
-            }
         }
 
         private void btnSaveFile_Click(object? sender, EventArgs e)
@@ -190,7 +184,7 @@ namespace SourceGUI
                         MessageBox.Show($"Ошибка при сохранении файла:\n{ex.Message}", "Ошибка сохранения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-            } // using автоматически вызовет Dispose для sfd
+            }
         }
 
         private void btnSaveDB_Click(object? sender, EventArgs e)
@@ -212,14 +206,14 @@ namespace SourceGUI
             }
         }
 
-        // --- История и Выход ---
+        // --- База данных и Выход ---
         private void btnViewDB_Click(object? sender, EventArgs e)
         {
             // Создаем экземпляр dataBaseForm
             using (var dataBaseForm = new DatabaseForm())
             {
                 // Показываем форму как модальное диалоговое окно
-                DialogResult dialogResult = dataBaseForm.ShowDialog(this); // Указываем владельца
+                DialogResult dialogResult = dataBaseForm.ShowDialog(this);
 
                 // Проверяем результат диалога
                 if (dialogResult == DialogResult.OK)
@@ -244,7 +238,7 @@ namespace SourceGUI
                         MessageBox.Show("Окно истории вернуло 'OK', но не удалось получить загруженные данные.", "Ошибка загрузки", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
-            } // using автоматически вызовет Dispose для dataBaseForm
+            }
         }
 
         private void btnExit_Click(object? sender, EventArgs e)

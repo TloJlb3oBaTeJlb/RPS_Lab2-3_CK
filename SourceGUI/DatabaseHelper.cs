@@ -93,8 +93,6 @@ namespace SourceGUI
         /// <summary>
         /// Сохраняет результат сортировки в базу данных.
         /// </summary>
-        /// <param name="originalArray">Исходный массив.</param>
-        /// <param name="sortedArray">Отсортированный массив.</param>
         /// <returns>True при успехе, иначе False.</returns>
         public static bool SaveSortResult(List<int> originalArray, List<int> sortedArray)
         {
@@ -111,8 +109,8 @@ namespace SourceGUI
                 {
                     connection.Open();
 
-                    // 1. Get the next ID
-                    long nextId = 1; // Default ID for the first record
+                    // 1. Получение следующего ID
+                    long nextId = 1; // ID для первой записи
                     using (var command = new SqliteCommand("SELECT MAX(ID) FROM MainTable", connection))
                     {
                         object? result = command.ExecuteScalar();
@@ -122,7 +120,7 @@ namespace SourceGUI
                         }
                     }
 
-                    // 2. Insert the new record
+                    // 2. Добавление записи
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = sql;
@@ -192,7 +190,6 @@ namespace SourceGUI
         /// <summary>
         /// Загружает полную запись истории (с массивами) по её ID.
         /// </summary>
-        /// <param name="id">ID записи.</param>
         /// <returns>Объект MainTableEntry или null, если запись не найдена или произошла ошибка.</returns>
         public static MainTableEntry? GetSortResultById(long id)
         {
@@ -239,9 +236,6 @@ namespace SourceGUI
         /// <summary>
         /// Обновляет существующую запись в базе данных.
         /// </summary>
-        /// <param name="id">ID записи для обновления.</param>
-        /// <param name="originalArray">Новый исходный массив.</param>
-        /// <param name="sortedArray">Новый отсортированный массив.</param>
         /// <returns>True при успехе, иначе False.</returns>
         public static bool UpdateSortResult(long id, List<int> originalArray, List<int> sortedArray)
         {
@@ -249,7 +243,6 @@ namespace SourceGUI
 
             string originalStr = string.Join(",", originalArray);
             string sortedStr = string.Join(",", sortedArray);
-            // Можно обновить и Timestamp, если это требуется по логике
             string timestampStr = DateTime.UtcNow.ToString("o");
 
             string sql = @"
@@ -308,54 +301,6 @@ namespace SourceGUI
                 }
             }
             return list;
-        }
-
-        /// <summary>
-        /// Получает одну случайную полную запись из истории.
-        /// </summary>
-        /// <returns>Объект MainTableEntry или null, если таблица пуста или произошла ошибка.</returns>
-        public static MainTableEntry? GetRandomSortResult()
-        {
-            MainTableEntry? entry = null;
-            // Используем ORDER BY RANDOM() LIMIT 1 для получения случайной строки в SQLite
-            string sql = "SELECT ID, Timestamp, OriginalArray, SortedArray FROM MainTable ORDER BY RANDOM() LIMIT 1";
-
-            try
-            {
-                using (var connection = new SqliteConnection(GetConnectionString()))
-                {
-                    connection.Open();
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = sql;
-
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read()) // Если запись найдена
-                            {
-                                long id = reader.GetInt64(0);
-                                string timestampStr = reader.GetString(1);
-                                string originalStr = reader.IsDBNull(2) ? string.Empty : reader.GetString(2);
-                                string sortedStr = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
-
-                                entry = new MainTableEntry
-                                {
-                                    ID = id,
-                                    Timestamp = DateTime.Parse(timestampStr).ToLocalTime(),
-                                    OriginalArray = ParseIntListFromString(originalStr),
-                                    SortedArray = ParseIntListFromString(sortedStr)
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка получения случайной записи из БД: {ex.Message}");
-                // Возвращаем null в случае ошибки
-            }
-            return entry;
         }
 
         /// <summary>

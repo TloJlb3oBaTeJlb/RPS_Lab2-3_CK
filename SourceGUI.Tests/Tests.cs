@@ -42,6 +42,7 @@ public class DatabaseTests
         Console.WriteLine($"Тест добавления {numberOfArrays} массивов: " + (success ? "Успех" : "Провал") + ", Время: " + elapsedTime);
     }
 
+    // Тест d: Изменене массивов в БД
     static void TestFetchAndSortRandomArrays(int numberOfArrays)
     {
         Stopwatch totalStopwatch = new Stopwatch();
